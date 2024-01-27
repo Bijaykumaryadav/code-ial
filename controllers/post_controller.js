@@ -12,5 +12,5 @@ module.exports.create = function(req,res){
         console.log('error in creating a post',err);
         //Handle the error or send an error response
         return res.status(500).send('Error in creating a post');
-    })
+    });
 }

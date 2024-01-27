@@ -8,7 +8,7 @@ const db = require("./config/mongoose");
 const session = require("express-session");
 const passport = require("passport");
 const passportLocal = require("./config/passport-local-strategy");
-const MongoStore = require('connect-mongo')(session);
+const MongoStore = require("connect-mongo")(session);
 // const sassMiddleware = require('sass-middleware');
 // app.use(sassMiddleware({
 //   src: './assets/scss',
@@ -17,7 +17,6 @@ const MongoStore = require('connect-mongo')(session);
 //   outputStyle: 'extended',
 //   prefix: '/css'
 // }));
-
 
 // app.use(express.urlencoded());
 app.use(express.urlencoded({ extended: true }));
@@ -53,7 +52,7 @@ app.use(
         autoRemove: "disabled",
       },
       function (err) {
-        console.log(err || 'connect-mongodb setup ok');
+        console.log(err || "connect-mongodb setup ok");
       }
     ),
   })
