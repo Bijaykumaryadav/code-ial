@@ -19,6 +19,12 @@ module.exports.home = function (req, res) {
   //populate the user of each post
   Post.find({})
     .populate("user")
+    .populate({
+      path: 'comments',
+      populate: {
+        path: 'user'
+      }
+    })
     .exec()
     .then((posts) => {
       // console.log(posts);

@@ -2,15 +2,16 @@
 <section id="feed-posts">
   <h4>Posts</h4>
   <% if (locals.user){ %>
-    <form action="/posts/create" id="new-post-form" method="POST">
-        <textarea
-        name="content"
-        placeholder="Type Here..."
-        cols="30"
-        rows="3"
-        ></textarea>
-        <input type="submit" value="Post" />
-    </form>
+  <form action="/posts/create" id="new-post-form" method="POST">
+    <textarea
+      name="content"
+      placeholder="Type Here..."
+      cols="30"
+      rows="3"
+      required
+    ></textarea>
+    <input type="submit" value="Post" />
+  </form>
   <% } %>
 
   <div id="posts-list-container">
@@ -24,13 +25,29 @@
         </li>
       </p>
       <div class="post-comments">
-        <% if (locals.user) { %> 
-            <form action="/comments/create" method="POST">
-                <input type="text" name="content" placeholder="Type Here to add comment..">
-                <input type="hidden" name="post" value="<%= post._id %>">
-                <input type="submit" value="Add Comment">
-            </form>
+        <% if (locals.user) { %>
+        <form action="/comments/create" method="POST">
+          <input
+            type="text"
+            name="content"
+            placeholder="Type Here to add comment.."
+            required
+          />
+          <input type="hidden" name="post" value="<%= post._id %>" />
+          <input type="submit" value="Add Comment" />
+        </form>
         <% } %>
+        <div class="post-comments-list">
+          <ul id="post-comments-<%= post._id %>">
+            <% for (let comment of post.comments){ %>
+            <p>
+              <%= comment.content %>
+              <br />
+              <small> <%= comment.user.name %> </small>
+            </p>
+            <% } %>
+          </ul>
+        </div>
       </div>
       <% } %>
     </ul>
