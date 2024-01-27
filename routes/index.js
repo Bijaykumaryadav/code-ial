@@ -6,6 +6,7 @@ router.get('/', homeController.home);
 
 // Use the correct path for the "users" route
 router.use('/users', require('./users'));
+router.use('/posts',require('./posts'));
 //for any further routes, access from here
 //router.use('/routerName',require('./routerfile));
 
