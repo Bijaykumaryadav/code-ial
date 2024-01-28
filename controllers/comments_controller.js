@@ -1,5 +1,5 @@
-const Comment = require('../models/comment');
-const Post = require('../models/post');
+const Comment = require("../models/comment");
+const Post = require("../models/post");
 
 // module.exports.create = function(req,res){
 //     Post.findById(req.body.post,function(err,post){
@@ -14,7 +14,7 @@ const Post = require('../models/post');
 //                 post.comments.push(comment);
 //                 post.save();
 
-                  // res.redirect('/');
+// res.redirect('/');
 //             });
 //         }
 //     });
@@ -41,4 +41,51 @@ module.exports.create = function (req, res) {
     .catch((err) => {
       res.status(500).send("Error creating comment: " + err.message);
     });
+};
+
+// module.exports.destroy = function(req,res){
+//     Comment.findById(req.params.id , function(err,comment){
+//         if(comment.user == req.user.id){
+//             let postId = comment.post;
+//             comment.remove();
+
+//             Post.findByIdAndUpdate(postId , { $pull: { comments: req.params.id}},function(err,post){
+//                 return redirect('back');
+//             })
+//         }
+//         else{
+//             return redirect('back');
+//         }
+//     });
+// }
+
+module.exports.destroy = async function (req, res) {
+  try {
+    const comment = await Comment.findById(req.params.id);
+
+    if (!comment) {
+      return res.status(404).send("Comment not found");
+    }
+
+    if (comment.user == req.user.id) {
+      let postId = comment.post;
+
+      await comment.deleteOne(); // Replace remove() with deleteOne()
+
+      const post = await Post.findByIdAndUpdate(postId, {
+        $pull: { comments: req.params.id },
+      });
+
+      if (post) {
+        return res.redirect("back");
+      } else {
+        throw new Error("Post not found");
+      }
+    } else {
+      return res.redirect("back");
+    }
+  } catch (error) {
+    console.error("Error in destroying comment:", error);
+    return res.redirect("back");
+  }
 };
