@@ -1,9 +1,22 @@
 const User = require("../models/user");
 
 module.exports.user_profile = function (req, res) {
-  return res.render("user_profile", {
-    title: "Profile",
-  });
+  const userId = req.params.id.trim(); // Remove leading and trailing spaces
+  User.findById(userId)
+    .exec()
+    .then((user) => {
+      if (!user) {
+        return res.status(404).send("User not found");
+      }
+      return res.render("user_profile", {
+        title: "User Profile",
+        profile_user: user,
+      });
+    })
+    .catch((err) => {
+      console.error(err);
+      return res.status(500).send("Internal Server Error");
+    });
 };
 
 //user the sign up page

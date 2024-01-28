@@ -1,12 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const Passport = require("passport");
-
 const usersController = require("../controllers/users_controller");
+
 
 // Corrected route for the "profile" endpoint
 router.get(
-  "/profile",
+  "/profile/:id",
   Passport.checkAuthentication,
   usersController.user_profile
 );
