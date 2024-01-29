@@ -19,6 +19,26 @@ module.exports.user_profile = function (req, res) {
     });
 };
 
+
+module.exports.update = async function (req, res) {
+  try {
+    if (req.user.id == req.params.id) {
+      const updatedUser = await User.findByIdAndUpdate(
+        req.params.id,
+        req.body,
+        { new: true }
+      );
+      return res.redirect("back");
+    } else {
+      return res.status(401).send("Unauthorized");
+    }
+  } catch (err) {
+    console.error(err);
+    return res.status(500).send("Internal Server Error");
+  }
+};
+
+
 //user the sign up page
 module.exports.signUp = function (req, res) {
   if (req.isAuthenticated()) {
