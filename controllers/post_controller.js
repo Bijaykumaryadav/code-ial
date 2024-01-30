@@ -7,9 +7,11 @@ module.exports.create = function (req, res) {
     user: req.user._id
   })
     .then((post) => {
+      req.flash('success','Post Published!');
       return res.redirect("back");
     })
     .catch((err) => {
+      req.flash("error",err);
       console.log("error in creating a post", err);
       //Handle the error or send an error response
       return res.status(500).send("Error in creating a post");
@@ -40,11 +42,14 @@ module.exports.destroy = async function (req, res) {
     if (post.user.toString() === req.user.id) {
       await Post.deleteOne({ _id: post._id }); // Assuming 'deleteOne' is the appropriate method for your schema
       await Comment.deleteMany({ post: req.params.id });
+      req.flash('success','Post and associated comments deleted!');
       return res.redirect("back");
     } else {
+      req.flash('error','you cannot delete this Post!');
       return res.redirect("back");
     }
   } catch (error) {
+    req.flash('error',err);
     console.log("Error in destroying post:", error);
     return res.status(500).send("Error in destroying post");
   }
