@@ -1,12 +1,15 @@
 <li>
   <p>
-    <% if(locals.user && locals.user.id == post.user.id){ %>
+    <% if (post.user && locals.user && locals.user.id &&
+    locals.user.id.toString() === post.user.id.toString()) { %>
     <small>
       <a href="/posts/destroy/<%= post.id %>">x</a>
     </small>
     <% } %> <%= post.content %>
     <br />
-    <small> <%= post.user.name %> </small>
+    <% if (post.user) { %>
+    <small><%= post.user.name %></small>
+    <% } %>
   </p>
   <div class="post-comments">
     <% if (locals.user) { %>

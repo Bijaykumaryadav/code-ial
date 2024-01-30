@@ -19,7 +19,6 @@ module.exports.user_profile = function (req, res) {
     });
 };
 
-
 module.exports.update = async function (req, res) {
   try {
     if (req.user.id == req.params.id) {
@@ -28,7 +27,7 @@ module.exports.update = async function (req, res) {
         req.body,
         { new: true }
       );
-      return res.redirect("back");
+      return res.redirect("/");
     } else {
       return res.status(401).send("Unauthorized");
     }
@@ -37,7 +36,6 @@ module.exports.update = async function (req, res) {
     return res.status(500).send("Internal Server Error");
   }
 };
-
 
 //user the sign up page
 module.exports.signUp = function (req, res) {
@@ -105,6 +103,7 @@ module.exports.create = function (req, res) {
 };
 //sign in and create the session for the user
 module.exports.createSession = function (req, res) {
+  req.flash("success", "Logged in Successfully");
   return res.redirect("/");
 };
 
@@ -115,7 +114,7 @@ module.exports.destroySession = function (req, res) {
       console.log("Error in logging out", err);
       return;
     }
-
+    req.flash("success", "You have logged out!");
     return res.redirect("/");
   });
 };
