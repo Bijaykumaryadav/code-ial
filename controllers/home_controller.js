@@ -46,6 +46,7 @@ module.exports.home = async function (req, res) {
   //using async and await we will update the code
   try {
     let posts = await Post.find({})
+      .sort("-createdAt")
       .populate("user")
       .populate({
         path: "comments",
@@ -60,7 +61,7 @@ module.exports.home = async function (req, res) {
       all_users: users,
     });
   } catch (err) {
-    console.log('Error',err);
+    console.log("Error", err);
     return;
   }
 };
