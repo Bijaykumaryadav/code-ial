@@ -50,7 +50,7 @@
                 </div>
                 </li>
 `);
-  };
+  }
   //method to delete a post from DOM
   let deletePost = function (deleteLink) {
     $(deleteLink).click(function (e) {
@@ -69,5 +69,6 @@
       });
     });
   };
+  
   createPost();
 }
