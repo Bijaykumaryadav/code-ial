@@ -1,5 +1,6 @@
 const User = require("../models/user");
-
+const fs = require('fs');
+const path = require('path');
 module.exports.user_profile = function (req, res) {
   const userId = req.params.id.trim(); // Remove leading and trailing spaces
   User.findById(userId)
@@ -36,36 +37,44 @@ module.exports.user_profile = function (req, res) {
 //     return res.status(500).send("Internal Server Error");
 //   }
 // };
-module.exports.update = async function(req,res){
-  if(req.user.id == req.params.id){
-    try{
-
+module.exports.update = async function (req, res) {
+  if (req.user.id == req.params.id) {
+    try {
       let user = await User.findById(req.params.id);
-      User.uploadedAvatar(req,res,function(err){
-        if(err){
-          console.log('*****Multer error: ',err);
+      User.uploadedAvatar(req, res, function (err) {
+        if (err) {
+          console.log("*****Multer error: ", err);
         }
         console.log(req.file);
         user.name = req.body.name;
         user.email = req.body.email;
 
-        if(req.file){
-          //saving the path of the uploaded file into the avater field in the user
-          user.avatar = User.avatarPath + '/' +req.file.filename;
+        if (req.file) {
+          // Check if user already has an avatar
+          if (user.avatar) {
+            // Construct the path of the previous avatar file
+            let previousAvatarPath = path.join(__dirname, "..", user.avatar);
+            // Check if the previous avatar file exists before trying to delete it
+            if (fs.existsSync(previousAvatarPath)) {
+              fs.unlinkSync(previousAvatarPath); // Delete the previous avatar file
+            }
+          }
+          // Saving the path of the uploaded file into the avatar field in the user
+          user.avatar = User.avatarPath + "/" + req.file.filename;
         }
         user.save();
-        return res.redirect('back');
+        return res.redirect("back");
       });
-    }catch(err){
-      req.flash('error',err);
-      return res.redirect('back');
+    } catch (err) {
+      req.flash("error", err);
+      return res.redirect("back");
     }
-
-  }else{
-    req.flash('error','Unauthorized!');
-    return res.status(401).send('Unauthorized');
+  } else {
+    req.flash("error", "Unauthorized!");
+    return res.status(401).send("Unauthorized");
   }
-}
+};
+
 
 //user the sign up page
 module.exports.signUp = function (req, res) {
