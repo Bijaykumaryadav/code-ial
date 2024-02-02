@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const multer = require("multer");
 const path = require("path");
-const AVATAR_PATH = path.join("/uploads/users/avater");
+const AVATAR_PATH = path.join("/uploads/users/avatar");
 
 const userSchema = new mongoose.Schema(
   {
@@ -24,7 +24,7 @@ const userSchema = new mongoose.Schema(
     },
   },
   {
-    timeStanps: true,
+    timeStamps: true,
   }
 );
 
@@ -40,7 +40,9 @@ let storage = multer.diskStorage({
 
 //static methods
 
-userSchema.statics.uploadedAvatar = multer({storage: storage}).single('avatar');
+userSchema.statics.uploadedAvatar = multer({ storage: storage }).single(
+  "avatar"
+);
 userSchema.statics.avatarPath = AVATAR_PATH;
 
 const User = mongoose.model("User", userSchema);
