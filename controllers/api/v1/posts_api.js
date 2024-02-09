@@ -25,20 +25,23 @@ module.exports.destroy = async function (req, res) {
       return res.status(404).send("Post not found");
     }
 
-    // if (post.user.toString() === req.user.id) {
-      await Post.deleteOne({ _id: post._id }); // Assuming 'deleteOne' is the appropriate method for your schema
+    // Check if post.user exists before accessing its properties
+    if (post.user && post.user.toString() === req.user.id) {
+      await Post.deleteOne({ _id: post._id });
       await Comment.deleteMany({ post: req.params.id });
       return res.status(200).json({
-        message: "Posts and associated comments deleted successfully"
+        message: "Post and associated comments deleted successfully",
       });
-    // } else {
-    //   req.flash("error", "you cannot delete this Post!");
-    //   return res.redirect("back");
-    // }
-  } catch (error) {
-    console.log('*******',err);
-    return res.status(500,{
-      message: "Internal Server Error"
+    } else {
+      return res.status(401).json({
+        message: "You cannot delete this post!",
+      });
+    }
+  } catch (err) {
+    console.log("Error:", err);
+    return res.status(500).json({
+      message: "Internal Server Error",
     });
   }
 };
+

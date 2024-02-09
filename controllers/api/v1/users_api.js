@@ -10,14 +10,14 @@ module.exports.createSession = async function (req, res) {
         });
     }
     return res.status(200).json({
-        message: 'Sign In Successful,  hers is your token , please keep it safe:',
+        message: 'Sign In Successful,  here is your token , please keep it safe:',
         data: {
-            token: jwt.sign(user.toJSON() , 'codeial' , {expiresIn: '10000'})
+            token: jwt.sign(user.toJSON() , 'codeial' , {expiresIn: '1000000'})
         }
     })
   } catch (err) {
     console.log("*******", err);
-    return res.status(500, {
+    return res.status(500).json({
       message: "Internal Server Error",
     });
   }
