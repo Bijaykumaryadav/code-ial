@@ -12,39 +12,31 @@ passport.use(
       clientSecret: "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",
       callbackURL: "http://localhost:8000/users/auth/google/callback",
     },
-    function (accessToken, refreshToken, profile, done) {
-        //find a user
-      User.findOne({ email: profile.emails[0].value }).exec(function (
-        err,
-        user
-      ) {
-        if (err) {
-          console.log("Error in google strategy-passport", err);
-          return;
-        }
-        console.log(profile);
+    async function (accessToken, refreshToken, profile, done) {
+      // Note the use of async keyword
+      try {
+        // Find a user
+        let user = await User.findOne({ email: profile.emails[0].value });
 
         if (user) {
-            //if found set this user as req.user
+          // If found, set this user as req.user
           return done(null, user);
         } else {
-            //if not found, create the user and set it as req.user
-          User.create(
-            {
-              name: profile.displayName,
-              email: profile.emails[0].value,
-              password: crypto.randomBytes(20).toString("hex"),
-            },
-            function (err, user) {
-              if (err) {
-                console.log("Error in creating google-strategy-passport", err);
-                return;
-              }
-            }
-          );
+          // If not found, create the user and set it as req.user
+          user = await User.create({
+            name: profile.displayName,
+            email: profile.emails[0].value,
+            password: crypto.randomBytes(20).toString("hex"),
+          });
+          console.log(profile);
+          return done(null, user);
         }
-      });
+      } catch (err) {
+        console.log("Error in google strategy-passport", err);
+        return done(err);
+      }
     }
   )
 );
+
 module.exports = passport;
